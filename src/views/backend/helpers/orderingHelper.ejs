@@ -1,0 +1,14 @@
+<%
+  orderingHelper = (collection ,id, ordering) => {
+    return `
+    	<input
+			id="change-ordering-${id}"
+			type="number"
+			class="form-control text-center"
+			style="height: 32px; width: 100px"
+			value="${ordering}"
+			onchange="changeOrderingHandler('${collection}', '${id}', '${ordering}')"
+		/>
+    ` 
+	} 
+%>

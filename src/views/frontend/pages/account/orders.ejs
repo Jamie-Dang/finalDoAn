@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Head -->
+    <%- include('./../../layouts/elements/head') %>
+    <link
+      rel="stylesheet"
+      href="/frontend/stylesheets/account-layout.css"
+      type="text/css"
+    />
+    <link
+      rel="stylesheet"
+      href="/frontend/stylesheets/account-orders.css"
+      type="text/css"
+    />
+  </head>
+  <body>
+    <div>
+      <!-- Header -->
+      <%- include('./../../layouts/elements/header') %>
+
+      <!-- Content -->
+      <div class="container">
+        <div class="account-container">
+          <div class="account">
+            <%- include('./elements/sidebar') %>
+
+            <div class="account__content">
+              <h2 class="account__title">
+                Đơn hàng của bạn: <%= orders.length %> đơn hàng
+              </h2>
+
+              <div class="content__container">
+                <div class="orders-wrapper">
+                  <% orders.forEach(function(order) { %>
+                  <a href="/tai-khoan/don-hang/<%= order._id %>" class="order">
+                    <div class="order-header">
+                      <div>
+                        <p class="order-id">#<%= order._id %></p>
+                        <p class="order-created">
+                          <%= moment(order.createdAt).format('DD.MM.YYYY') %>
+                        </p>
+                      </div>
+                      <% if (order.status == 'pending') { %>
+                      <div class="order-status">Đang xử lý</div>
+                      <% } else if (order.status == 'confirmed') { %>
+                      <div class="order-status">Đã xác nhận</div>
+                      <% } else { %>
+                      <div class="order-status">Đã hủy</div>
+                      <% } %>
+                    </div>
+                    <div class="order-body">
+                      <% order.items.forEach(function(item) { %>
+                      <div class="order-item">
+                        <img
+                          class="item-image"
+                          src="/images/products/<%= item.product.image %>"
+                          alt=""
+                        />
+                        <div class="item-content">
+                          <p class="item-name"><%= item.product.name %></p>
+                          <p class="item-quantity">
+                            Số lượng: <%= item.quantity %>
+                          </p>
+                          <p class="item-size">Kích cỡ: <%= item.size %></p>
+                          <p class="item-price">
+                            Giá: <%= item.price.toLocaleString( "vi-VN", {
+                            style: "currency", currency: "VND" }) %> / 1 sản
+                            phẩm
+                          </p>
+                        </div>
+                      </div>
+                      <% }); %>
+                    </div>
+                    <div class="order-footer">
+                      <p>
+                        Tổng đơn hàng:
+                        <span class="order-total"
+                          ><%= order.total.toLocaleString( "vi-VN", { style:
+                          "currency", currency: "VND" }) %></span
+                        >
+                      </p>
+                    </div>
+                  </a>
+                  <% }); %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <%- include('./../../layouts/elements/footer') %>
+    </div>
+
+    <!-- Script -->
+    <%- include('./../../layouts/elements/script') %>
+    <script>
+      const updateAccountInfoHandler = (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const formObject = Object.fromEntries(formData.entries());
+
+        $.ajax({
+          type: "POST",
+          url: `/tai-khoan/thong-tin-ca-nhan`,
+          dataType: "json",
+          data: formObject,
+          success: (response) => {
+            if (response.status == "success") {
+              myAlert("success", response.message);
+            } else {
+              myAlert("error", response.message);
+            }
+          },
+        });
+      };
+    </script>
+  </body>
+</html>

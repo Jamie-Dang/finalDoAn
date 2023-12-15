@@ -1,0 +1,26 @@
+<div class="container">
+  <section class="product-container">
+    <h2 class="product-heading">SẢN PHẨM MỚI</h2>
+    <div class="product-list">
+      <% newProducts.forEach( product => { %>
+      <a
+        href="/san-pham/<%= product.slug %>?id=<%= product._id %>"
+        class="product"
+      >
+        <img
+          src="/images/products/<%= product.image %>"
+          class="product__image"
+        />
+        <div class="product__info">
+          <h2 class="product__title"><%= product.name %></h2>
+          <!-- <p class="product__description">Product Description 1</p> -->
+          <span class="product__price"
+            ><%= product.price.toLocaleString('vi-VN', { style: 'currency',
+            currency: 'VND' }) %></span
+          >
+        </div>
+      </a>
+      <% }) %>
+    </div>
+  </section>
+</div>

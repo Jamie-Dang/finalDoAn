@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Head -->
+    <%- include('./../../layouts/elements/head') %>
+    <link
+      rel="stylesheet"
+      href="/frontend/stylesheets/products.css"
+      type="text/css"
+    />
+  </head>
+  <body>
+    <div>
+      <!-- Header -->
+      <%- include('./../../layouts/elements/header') %>
+
+      <!-- Content -->
+      <div class="container">
+        <div class="filter-search-container">
+          <div class="filter-container">
+            <label for="sort-select">Sắp xếp:</label>
+            <select
+              id="sort-select"
+              name="sort"
+              onchange="filterAndSearchHandler(event)"
+            >
+              <option value="-createdAt">Mới nhất</option>
+              <option value="price">Giá (Thấp đến cao)</option>
+              <option value="-price">Giá (Cao đến thấp)</option>
+            </select>
+            <label for="category-select">Thể loại: </label>
+            <select
+              id="category-select"
+              name="category"
+              onchange="filterAndSearchHandler(event)"
+            >
+              <option value="">Tất cả</option>
+              <% categories.forEach((category) => { %>
+              <option value="<%= category._id %>"><%= category.name %></option>
+              <% }); %>
+            </select>
+            <label for="price-select">Giá tiền: </label>
+            <select
+              id="price-select"
+              name="price"
+              onchange="filterAndSearchHandler(event)"
+            >
+              <option value="">Tất cả</option>
+              <option value="0-250000">Dưới 250k</option>
+              <option value="250000-500000">Từ 250k - 500k</option>
+              <option value="500000-750000">Từ 500k - 750k</option>
+              <option value="750000-1000000">Từ 750k - 1000k</option>
+              <option value="1000000-9999999">Trên 1000k</option>
+            </select>
+            <label for="color-select">Màu sắc: </label>
+            <select
+              id="color-select"
+              name="color"
+              onchange="filterAndSearchHandler(event)"
+            >
+              <option value="">Tất cả</option>
+              <% colors.forEach((color) => { %>
+              <option value="<%= color._id %>"><%= color.name %></option>
+              <% }); %>
+            </select>
+            <!-- <label for="size-select">Kích cỡ: </label>
+            <select
+              id="size-select"
+              name="size"
+              onchange="filterAndSearchHandler(event)"
+            >
+              <option value="">Tất cả</option>
+              <% sizes.forEach((size) => { %>
+              <option value="<%= size._id %>"><%= size.name %></option>
+              <% }); %>
+            </select> -->
+          </div>
+
+          <div class="search-container">
+            <form onsubmit="filterAndSearchHandler(event)">
+              <input
+                type="text"
+                name="search"
+                placeholder="Tìm kiếm sản phẩm..."
+              />
+              <button type="submit">Tìm kiếm</button>
+            </form>
+          </div>
+        </div>
+        <div class="product-list">
+          <% products.forEach( product => { %>
+          <a
+            href="/san-pham/<%= product.slug %>?id=<%= product._id %>"
+            class="product"
+          >
+            <img
+              src="/images/products/<%= product.image %>"
+              class="product__image"
+            />
+            <div class="product__info">
+              <h2 class="product__title"><%= product.name %></h2>
+              <!-- <p class="product__description">Product Description 1</p> -->
+              <span class="product__price"
+                ><%= product.price.toLocaleString('vi-VN', { style: 'currency',
+                currency: 'VND' }) %></span
+              >
+            </div>
+          </a>
+          <% }) %>
+        </div>
+        <div id="not-found"></div>
+      </div>
+
+      <!-- Footer -->
+      <%- include('./../../layouts/elements/footer') %>
+    </div>
+
+    <!-- Script -->
+    <%- include('./../../layouts/elements/script') %>
+    <script>
+      // filter and search handler with ajax
+      function filterAndSearchHandler(event) {
+        event.preventDefault();
+
+        const sort = document.getElementById("sort-select").value;
+        const price = document.getElementById("price-select").value;
+        const category = document.getElementById("category-select").value;
+        const color = document.getElementById("color-select").value;
+        // const size = document.getElementById("size-select").value;
+        const search = document.querySelector(
+          ".filter-search-container .search-container input"
+        ).value;
+        console.log(sort, category, color, search, price);
+        $.ajax({
+          type: "POST",
+          url: "/san-pham/ajax",
+          data: {
+            sort,
+            category,
+            color,
+            // size,
+            search,
+            price,
+          },
+          dataType: "json",
+          success: function (response) {
+            console.log(response);
+            if (response.status === "success") {
+              renderProductList(response.products);
+            }
+          },
+        });
+      }
+
+      function renderProductList(products) {
+        const productList = document.querySelector(".product-list");
+        productList.innerHTML = "";
+        document.querySelector("#not-found").innerHTML = "";
+        products.forEach((product) => {
+          const productElement = document.createElement("a");
+          productElement.setAttribute(
+            "href",
+            `/san-pham/${product.slug}?id=${product._id}`
+          );
+          productElement.classList.add("product");
+          productElement.innerHTML = `
+            <img
+              src="/images/products/${product.image}"
+              class="product__image"
+            />
+            <div class="product__info">
+              <h2 class="product__title">${product.name}</h2>
+              <span class="product__price">${product.price.toLocaleString(
+                "vi-VN",
+                { style: "currency", currency: "VND" }
+              )}</span>
+            </div>
+          `;
+          productList.appendChild(productElement);
+        });
+
+        if (!products || products.length === 0) {
+          document.querySelector("#not-found").innerHTML =
+            "<h2 >Không tìm thấy sản phẩm phù hợp</h2>";
+
+          return;
+        }
+      }
+    </script>
+  </body>
+</html>

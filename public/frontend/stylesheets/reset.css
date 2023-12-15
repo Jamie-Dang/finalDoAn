@@ -1,0 +1,66 @@
+/* Reset CSS */
+
+/* Reset box-sizing to default */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Reset margin and padding */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ol,
+ul,
+li,
+blockquote,
+figure,
+dl,
+dd {
+  margin: 0;
+  padding: 0;
+}
+
+/* Remove list styling */
+ol,
+ul {
+  list-style: none;
+}
+
+/* Set default font properties */
+body {
+  font-family: Arial, sans-serif;
+}
+
+/* Reset font styles for heading elements */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: normal;
+}
+
+/* Reset default anchor styles */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Reset table border spacing */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* Reset img max-width */
+img {
+  max-width: 100%;
+}

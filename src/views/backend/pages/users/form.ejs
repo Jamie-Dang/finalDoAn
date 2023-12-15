@@ -1,0 +1,117 @@
+<!-- prettier-ignore -->
+<% const COLLECTION = "users" %> 
+<% const BASE_PATH = `/admin/${COLLECTION}` %>
+<% const BASE_IMAGE_PATH = `/images/${COLLECTION}` %>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <% if(typeof alert != 'undefined') { %>
+      <!--  -->
+      <% alert.forEach(function(error) { %>
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <%= error.msg %>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="alert"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <% }) %>
+      <!--  -->
+      <% } %>
+
+      <div class="card card-primary">
+        <!-- <div class="card-header">
+          <h3 class="card-title"><%= title %></h3>
+        </div> -->
+
+        <form action="<%= BASE_PATH %>/save" method="POST">
+          <div class="card-body">
+            <div class="form-group">
+              <label for="name">Tên</label>
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                name="name"
+                placeholder="Vui lòng nhập tên vật phẩm"
+                value="<%= data.name || '' %>"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                placeholder=""
+                value="<%= data.email || '' %>"
+                readonly
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Số điện thoại</label>
+              <input
+                type="text"
+                class="form-control"
+                id="phone"
+                name="phone"
+                placeholder=""
+                value="<%= data.phone || '' %>"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="address">Địa chỉ</label>
+              <input
+                type="text"
+                class="form-control"
+                id="address"
+                name="address"
+                placeholder=""
+                value="<%= data.address || '' %>"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Vai trò</label>
+              <select class="form-control" name="role">
+                <!-- <option value=""></option> -->
+
+                <!--  -->
+                <% if (data.role == 'user') { %>
+                <option value="user" selected>Người dùng</option>
+                <option value="staff">Nhân viên</option>
+
+                <% } else if (data.role == 'staff') { %>
+                <option value="user">Người dùng</option>
+                <option value="staff" selected>Nhân viên</option>
+                <% } else { %>
+                <option value="<%= data.role %>">Lỗi</option>
+                <!-- <option value="user">Người dùng</option>
+                <option value="staff" selected>Nhân viên</option> -->
+                <% } %>
+              </select>
+            </div>
+
+            <input type="hidden" name="id" value="<%= id %>" />
+          </div>
+
+          <div class="card-footer">
+            <a href="<%= BASE_PATH %>" class="btn btn-default">Hủy</a>
+            <button type="submit" class="btn btn-primary float-right">
+              <%= id ? "Sửa" : "Thêm" %>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

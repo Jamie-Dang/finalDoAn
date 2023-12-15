@@ -1,0 +1,51 @@
+<%
+	paginationHelper = (url, currentPage, totalPages) => {
+		let pageStart, prevPage, frontEmptyPage, behindEmptyPage, nextPage, pageEnd;
+
+		if(totalPages <= 1) return ''
+
+		if(currentPage > 1) {
+			pageStart = {link: url, text: '«'}
+			prevPage = {link: `${url}?page=${currentPage-1}`, text: currentPage-1}
+		}
+
+		if(currentPage > 2) {
+			frontEmptyPage = {link: '#', text: '...'}
+		}
+
+		if(currentPage < totalPages - 1) {
+			behindEmptyPage = {link: '#', text: '...'}
+		}
+
+		if(currentPage < totalPages) {
+			nextPage = {link: `${url}?page=${currentPage+1}`, text: currentPage+1}
+			pageEnd = {link: `${url}?page=${totalPages}`, text: '»'}
+		}
+
+		const pagination = [
+			pageStart, 
+			frontEmptyPage, 
+			prevPage, 
+			{link: `${url}?page=${currentPage}`, text: currentPage, active: true},
+			nextPage, 
+			behindEmptyPage, 
+			pageEnd
+		]
+
+		let paginationHtml = ''
+		pagination.forEach( item => {
+			if(item) {
+				paginationHtml += `
+					<li class="page-item ${item.active ? 'active' : ''}">
+						<a class="page-link" href="${item.link}">${item.text}</a>
+					</li>`
+			}
+		})
+
+		return `
+			<ul class="pagination pagination-sm m-0 float-right">
+				${paginationHtml}
+			</ul>
+		`
+	}
+%>

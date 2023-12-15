@@ -1,0 +1,33 @@
+<% 
+    actionHelper = (basePath, id, role) => {
+        // if(role != 'admin') {
+        //     return `
+        //     <div class="text-center">
+        //         <a
+        //             href="${basePath}/form/${id}"
+        //             class="btn btn-sm btn-primary"
+        //         >
+        //             <i class="fas fa-edit"></i> </a
+        //         >
+        //     </div>
+        // `;
+        // }
+
+        return `
+            <div class="text-center">
+                <a
+                    href="${basePath}/form/${id}"
+                    class="btn btn-sm btn-primary"
+                >
+                    <i class="fas fa-edit"></i> </a
+                >
+                <a
+                    href="javascript:deleteItemHandler('${basePath}/delete/${id}')"
+                    class="btn btn-sm btn-danger btn-delete"
+                >
+                    <i class="fas fa-trash"></i>
+                </a>
+            </div>
+        `;
+    } 
+%>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Head -->
+    <%- include('./../../layouts/elements/head') %>
+    <link
+      rel="stylesheet"
+      href="/frontend/stylesheets/articles.css"
+      type="text/css"
+    />
+  </head>
+  <body>
+    <div>
+      <!-- Header -->
+      <%- include('./../../layouts/elements/header') %>
+
+      <!-- Content -->
+      <div class="container">
+        <div class="article-list">
+          <% articles.forEach( article => { %>
+          <a
+            href="/bai-viet/<%= article.slug %>?id=<%= article._id %>"
+            class="article"
+          >
+            <img
+              src="/images/articles/<%= article.image %>"
+              class="article__image"
+            />
+            <div class="article__info">
+              <h2 class="article__title"><%= article.name %></h2>
+              <p class="article__description">
+                <%= article.category?.name %> | <%=
+                moment(article.createdAt).format("DD.MM.YYYY") %>
+              </p>
+            </div>
+          </a>
+          <% }) %>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <%- include('./../../layouts/elements/footer') %>
+    </div>
+
+    <!-- Script -->
+    <%- include('./../../layouts/elements/script') %>
+  </body>
+</html>

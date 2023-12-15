@@ -1,0 +1,174 @@
+<!-- prettier-ignore -->
+<% 
+let navigation = [
+  { icon: "fas fa-th", text: "Bảng điều khiển", link: "/admin" },
+  { icon: "fa-solid fa-user-secret", text: "Quản lý tài khoản", link: "/admin/users" },
+  {
+    icon: "fa-solid fa-cart-shopping",
+    text: "Quản lý mua sắm",
+    children: [
+      { icon: "far fa-circle", text: "Đơn hàng", link: "/admin/orders" },
+      { icon: "far fa-circle", text: "Mã giảm giá", link: "/admin/discounts" },
+    ],
+  },
+  {
+    icon: "fa-solid fa-box",
+    text: "Quản lý sản phẩm",
+    children: [
+      { icon: "far fa-circle", text: "Danh mục", link: "/admin/products/categories" },
+      { icon: "far fa-circle", text: "Sản phẩm", link: "/admin/products" },
+      { icon: "far fa-circle", text: "Màu sắc", link: "/admin/products/colors" },
+      { icon: "far fa-circle", text: "Kích cỡ", link: "/admin/products/sizes" },
+    ],
+  },
+  {
+    icon: "fa-solid fa-newspaper",
+    text: "Quản lý bài viết",
+    children: [
+      { icon: "far fa-circle", text: "Thể loại", link: "/admin/articles/categories" },
+      { icon: "far fa-circle", text: "Bài viết", link: "/admin/articles" },
+    ],
+  },
+  { icon: "fa-solid fa-right-from-bracket", text: "Đăng xuất", link: "/dang-xuat" },
+];
+
+  if(user.role != 'admin') {
+    navigation = navigation.filter( nav => nav.text != "Quản lý tài khoản")
+  }
+
+  if(user.role == 'user') {
+    navigation = []
+  }
+%>
+
+<div class="sidebar">
+  <!-- Sidebar user panel (optional) -->
+  <!-- <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+    <div class="image">
+      <img
+        src="/backend/images/user-160x160.jpg"
+        class="img-circle elevation-2"
+        alt="User Image"
+      />
+    </div>
+    <div class="info">
+      <a href="#" class="d-block">Alexander Pierce</a>
+    </div>
+  </div> -->
+
+  <!-- SidebarSearch Form -->
+  <!-- <div class="form-inline">
+    <div class="input-group" data-widget="sidebar-search">
+      <input
+        class="form-control form-control-sidebar"
+        type="search"
+        placeholder="Search"
+        aria-label="Search"
+      />
+      <div class="input-group-append">
+        <button class="btn btn-sidebar">
+          <i class="fas fa-search fa-fw"></i>
+        </button>
+      </div>
+    </div>
+  </div> -->
+
+  <!-- Sidebar Menu -->
+  <nav class="mt-2">
+    <ul
+      class="nav nav-pills nav-sidebar flex-column"
+      data-widget="treeview"
+      role="menu"
+      data-accordion="false"
+    >
+      <!-- Add icons to the links using the .nav-icon class
+         with font-awesome or any other icon font library -->
+      <% navigation.forEach( nav => {%>
+      <!-- IF -->
+      <% if(nav.children){ %>
+      <!-- prettier-ignore -->
+      <% const childActive = nav.children.find( child => child.link == currentPath) %>
+
+      <li class="nav-item <%= childActive ? 'menu-open' : '' %>">
+        <a href="#" class="nav-link <%= childActive ? 'active' : '' %>">
+          <i class="nav-icon <%= nav.icon %>"></i>
+          <p>
+            <%= nav.text %>
+            <i class="right fas fa-angle-left"></i>
+          </p>
+        </a>
+        <ul class="nav nav-treeview">
+          <% nav.children.forEach( navChild => {%>
+          <li class="nav-item">
+            <a
+              href="<%= navChild.link %>"
+              class="nav-link <%= (currentPath === navChild.link) ? 'active' : '' %>"
+            >
+              <i class="far <%= navChild.icon %>"></i>
+              <p><%= navChild.text %></p>
+            </a>
+          </li>
+          <% }) %>
+        </ul>
+      </li>
+
+      <!-- ELSE -->
+      <% } else { %>
+      <li class="nav-item">
+        <a
+          href="<%= nav.link %>"
+          class="nav-link <%= (currentPath === nav.link) ? 'active' : '' %>"
+        >
+          <i class="nav-icon <%= nav.icon %>"></i>
+          <p>
+            <%= nav.text %>
+            <!-- <span class="right badge badge-danger">New</span> -->
+          </p>
+        </a>
+      </li>
+      <% } %>
+      <!--  -->
+      <% }) %>
+
+      <!-- <li class="nav-item menu-open">
+        <a href="#" class="nav-link active">
+          <i class="nav-icon fa-solid fa-layer-group"></i>
+          <p>
+            Vật phẩm
+            <i class="right fas fa-angle-left"></i>
+          </p>
+        </a>
+        <ul class="nav nav-treeview">
+          <li class="nav-item">
+            <a
+              href="/admin/items"
+              class="nav-link <%= (currentPath === '/admin/items') ? 'active' : '' %>"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Danh sách</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a
+              href="/admin/items/form"
+              class="nav-link <%= currentPath === '/admin/items/form' ? 'active' : '' %>"
+            >
+              <i class="far fa-circle nav-icon"></i>
+              <p>Thêm</p>
+            </a>
+          </li>
+        </ul>
+      </li> -->
+
+      <!-- <li class="nav-item">
+        <a href="#" class="nav-link">
+          <i class="nav-icon fas fa-th"></i>
+          <p>
+            Simple Link
+            <span class="right badge badge-danger">New</span>
+          </p>
+        </a>
+      </li> -->
+    </ul>
+  </nav>
+</div>

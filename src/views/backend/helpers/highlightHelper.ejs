@@ -1,0 +1,8 @@
+<% 
+ 	highlightHelper = (name, keyword) => {
+    if(!keyword) return name;
+
+	const html = `<span class="bg-warning">${keyword}</span>`
+    return name.replace(new RegExp(keyword, "ig"), html)
+	}
+%>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Head -->
+    <%- include('./../../layouts/elements/head') %>
+    <link
+      rel="stylesheet"
+      href="/frontend/stylesheets/home.css"
+      type="text/css"
+    />
+  </head>
+  <body>
+    <div>
+      <!-- Header -->
+      <%- include('./../../layouts/elements/header') %>
+
+      <!-- Content -->
+      <%- include('./elements/slider') %>
+      <!--  -->
+      <%- include('./elements/new-products-section') %>
+      <!--  -->
+      <%- include('./elements/service-section') %>
+
+      <!-- Footer -->
+      <%- include('./../../layouts/elements/footer') %>
+    </div>
+
+    <!-- Script -->
+    <%- include('./../../layouts/elements/script') %>
+
+    <script>
+      const mySwiper = new Swiper(".swiper-container", {
+        slidesPerView: 1,
+        spaceBetween: 20,
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+        },
+      });
+    </script>
+  </body>
+</html>

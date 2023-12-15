@@ -1,0 +1,50 @@
+/* CUSTOM */
+
+.account__content .account__title {
+  text-align: center;
+}
+
+.content__container {
+  display: flex;
+  justify-content: center;
+}
+
+.content__form {
+  /* display: flex;
+  flex-direction: column; */
+  max-width: 26rem;
+  width: 100%;
+}
+
+.content__form-group {
+  margin: 0 auto 1rem;
+}
+
+.content__label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  /* padding-bottom: 4px; */
+}
+
+.content__input {
+  border-radius: 0.4rem;
+  border: 1px solid #ccc;
+  margin-top: 0.4rem;
+  padding: 0.5rem 0.6rem;
+  width: 100%;
+}
+
+.content__button {
+  width: 100%;
+  border-radius: 0.4rem;
+  padding: 0.6rem 0.4rem;
+  background-color: #000;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.content__button:hover {
+  background-color: var(--gray-600);
+}

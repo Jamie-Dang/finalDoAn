@@ -1,0 +1,23 @@
+<!-- Font awesome -->
+<script src="/backend/javascripts/all.min.js"></script>
+
+<!-- REQUIRED SCRIPTS -->
+
+<!-- jQuery -->
+<script src="/backend/javascripts/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="/backend/javascripts/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="/backend/javascripts/adminlte.min.js"></script>
+
+<script src="/backend/javascripts/slugify.js"></script>
+<script src="/backend/javascripts/ckeditor/ckeditor.js"></script>
+<script src="/backend/javascripts/sweetalert2.all.min.js"></script>
+<script src="/backend/javascripts/custom.js"></script>
+<script>
+  if (document.querySelector("#editor")) {
+    ClassicEditor.create(document.querySelector("#editor")).catch((error) => {
+      console.error(error);
+    });
+  }
+</script>

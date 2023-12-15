@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Head -->
+    <%- include('./../../layouts/elements/head') %>
+    <link
+      rel="stylesheet"
+      href="/frontend/stylesheets/article.css"
+      type="text/css"
+    />
+  </head>
+  <body>
+    <div>
+      <!-- Header -->
+      <%- include('./../../layouts/elements/header') %>
+
+      <!-- Content -->
+      <main class="article-container">
+        <h2 class="article__title"><%= article.name %></h2>
+        <img
+          class="article__image"
+          src="/images/articles/<%= article.image %>"
+          alt=""
+        />
+        <div class="article__content"><%- article.content %></div>
+      </main>
+
+      <!-- Footer -->
+      <%- include('./../../layouts/elements/footer') %>
+    </div>
+
+    <!-- Script -->
+    <%- include('./../../layouts/elements/script') %>
+  </body>
+</html>

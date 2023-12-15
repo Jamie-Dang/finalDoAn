@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Head -->
+    <%- include('./../../layouts/elements/head') %>
+    <link
+      rel="stylesheet"
+      href="/frontend/stylesheets/error.css"
+      type="text/css"
+    />
+  </head>
+  <body>
+    <div>
+      <!-- Header -->
+      <%- include('./../../layouts/elements/header') %>
+
+      <!-- Content -->
+      <div class="wrapper">
+        <div class="container">
+          <!-- <h1></h1> -->
+          <h1><%= error.status %> | <%= message %></h1>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <%- include('./../../layouts/elements/footer') %>
+    </div>
+
+    <!-- Script -->
+    <%- include('./../../layouts/elements/script') %>
+    <script>
+      const signInHandler = (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const formObject = Object.fromEntries(formData.entries());
+
+        $.ajax({
+          type: "POST",
+          url: `/dang-nhap`,
+          dataType: "json",
+          data: formObject,
+          success: (response) => {
+            if (response.status == "success") {
+              myAlert("success", response.message);
+
+              setTimeout(() => {
+                window.location.href = "/tai-khoan";
+              }, 1000);
+            } else {
+              myAlert("error", response.message);
+            }
+          },
+        });
+      };
+    </script>
+  </body>
+</html>

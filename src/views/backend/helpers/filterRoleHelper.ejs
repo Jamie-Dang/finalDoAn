@@ -1,0 +1,16 @@
+<% 
+  filterRoleHelper = (collection, filterStatus) => {
+		let html = ''
+		filterStatus.forEach(filterItem => {
+			html += `
+        <a
+          href="/admin/${collection}/role/${ filterItem.value }"
+          class="btn btn-${ filterItem.selected ? 'dark' : 'secondary' }"
+        >
+          ${ filterItem.name } (${ filterItem.count }) 
+        </a>
+      ` 
+    })
+    return html;
+  } 
+%>

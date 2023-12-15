@@ -1,0 +1,44 @@
+.article-list {
+  padding: 60px 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(24rem, 1fr));
+  grid-gap: 24px;
+}
+
+.article {
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.article__image {
+  border-radius: 0.5rem;
+  width: 100%;
+  height: 18rem;
+  background: #eee;
+  margin-right: 20px;
+  object-fit: cover;
+}
+
+.article__info {
+  color: var(--gray-900);
+  padding: 16px 0;
+  flex: 1;
+}
+
+.article__title {
+  font-weight: 700;
+  font-size: 1rem;
+  margin: 0;
+  margin-bottom: 0.4rem;
+}
+
+.article__description {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--gray-600);
+}
+
+/* .article__price {
+  font-weight: 700;
+  font-size: 15px;
+} */

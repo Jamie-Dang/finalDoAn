@@ -1,0 +1,110 @@
+<!-- prettier-ignore -->
+<% const COLLECTION = "discounts" %> 
+<% const BASE_PATH = `/admin/${COLLECTION}` %>
+<% const BASE_IMAGE_PATH = `/images/${COLLECTION}` %>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <% if(typeof alert != 'undefined') { %>
+      <!--  -->
+      <% alert.forEach(function(error) { %>
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <%= error.msg %>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="alert"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <% }) %>
+      <!--  -->
+      <% } %>
+
+      <div class="card card-primary">
+        <!-- <div class="card-header">
+          <h3 class="card-title"><%= title %></h3>
+        </div> -->
+
+        <form action="<%= BASE_PATH %>/save" method="POST">
+          <div class="card-body">
+            <div class="form-group">
+              <label for="code">Mã giảm giá</label>
+              <input
+                type="name"
+                class="form-control"
+                id="code"
+                name="code"
+                value="<%= data.code || '' %>"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Loại giảm giá</label>
+              <select class="form-control" name="type">
+                <!--  -->
+                <% if (!data.type || data.type == 'fixed') { %>
+                <option value="fixed" selected>Giảm giá theo số tiền</option>
+                <option value="percentage">Giảm giá theo phần trăm</option>
+                <% } else { %>
+                <option value="fixed">Giảm giá theo số tiền</option>
+                <option value="percentage" selected>
+                  Giảm giá theo phần trăm
+                </option>
+                <% } %>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="discount">Giá trị giảm</label>
+              <input
+                type="number"
+                class="form-control"
+                id="discount"
+                name="discount"
+                value="<%= data.discount || '' %>"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="quantity">Số lượng mã</label>
+              <input
+                type="number"
+                class="form-control"
+                id="quantity"
+                name="quantity"
+                value="<%= data.quantity || '' %>"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="startedAt">Ngày bắt đầu</label>
+              <input type="date" class="form-control" id="startedAt"
+              name="startedAt" value="<%=
+              moment(data.startedAt).format("YYYY-MM-DD") || '' %>" />
+            </div>
+
+            <div class="form-group">
+              <label for="expiredAt">Ngày kết thúc</label>
+              <input type="date" class="form-control" id="expiredAt"
+              name="expiredAt" value="<%=
+              moment(data.expiredAt).format("YYYY-MM-DD") || '' %>" />
+            </div>
+
+            <input type="hidden" name="id" value="<%= id %>" />
+          </div>
+
+          <div class="card-footer">
+            <a href="<%= BASE_PATH %>" class="btn btn-default">Hủy</a>
+            <button type="submit" class="btn btn-primary float-right">
+              <%= id ? "Sửa" : "Thêm" %>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

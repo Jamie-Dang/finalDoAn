@@ -1,0 +1,39 @@
+<!-- prettier-ignore -->
+<% 
+const navigation = user.role != 'user' 
+? 
+  [
+    { text: "Trang quản lý", path: "/admin" },
+    { text: "Thông tin cá nhân", path: "/tai-khoan/thong-tin-ca-nhan" },
+    { text: "Danh sách đơn hàng", path: "/tai-khoan/don-hang" },
+    { text: "Đăng xuất", path: "/dang-xuat" },
+  ]
+: 
+  [
+    { text: "Thông tin cá nhân", path: "/tai-khoan/thong-tin-ca-nhan" },
+    { text: "Danh sách đơn hàng", path: "/tai-khoan/don-hang" },
+    { text: "Đăng xuất", path: "/dang-xuat" },
+  ];
+%>
+
+<div class="account__sidebar">
+  <h2 class="account__title"><%= user.name %></h2>
+  <div class="sidebar__list">
+    <% navigation.forEach((navItem) =>{ %>
+    <!-- prettier-ignore -->
+    <div class="sidebar__item <%= navItem.path == currentPath ? 'active' : '' %>">
+      <a href="<%= navItem.path %>"><%= navItem.text %></a>
+    </div>
+    <% }); %>
+
+    <!-- <div class="sidebar__item">
+      <a href="#">Thông tin tài khoản</a>
+    </div>
+    <div class="sidebar__item">
+      <a href="#">Danh sách đơn hàng</a>
+    </div>
+    <div class="sidebar__item">
+      <a href="/dang-xuat">Đăng xuất</a>
+    </div> -->
+  </div>
+</div>

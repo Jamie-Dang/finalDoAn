@@ -1,0 +1,112 @@
+<!-- prettier-ignore -->
+<% include ./../../helpers/filterStatusHelper.ejs %>
+<% include ./../../helpers/statusHelper.ejs %>
+<% include ./../../helpers/orderingHelper.ejs %>
+<% include ./../../helpers/highlightHelper.ejs %>
+<% include ./../../helpers/paginationHelper.ejs %>
+<% include ./../../helpers/actionHelper.ejs %>
+
+<% const COLLECTION = "articles/categories" %> 
+<% const BASE_PATH = `/admin/${COLLECTION}` %>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <!-- <div class="card-header"></div> -->
+
+        <div class="card-body">
+          <div class="float-left">
+            <!-- <div class="float-left"> -->
+            <%- filterStatusHelper(COLLECTION, filterStatus) %>
+          </div>
+
+          <form
+            class="form-inline my-2 my-lg-0 float-right"
+            action="<%= BASE_PATH %>"
+            method="GET"
+          >
+            <input
+              class="form-control mr-sm-2"
+              type="search"
+              name="search"
+              placeholder=""
+              aria-label="Tìm kiếm"
+              value="<%= search || '' %>"
+            />
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+              Tìm kiếm
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <!-- <h3 class="card-title h-100 align-middle">Bordered Table</h3> -->
+          <a href="<%= BASE_PATH %>/form" class="btn btn-primary float-right">
+            Thêm mới
+          </a>
+        </div>
+
+        <div class="card-body">
+          <table class="table table-bordered">
+            <thead class="text-center">
+              <tr>
+                <!-- <th style="width: 10px">#</th> -->
+                <!-- <th style="width: 12px">Chọn</th> -->
+                <th>Tên</th>
+                <th>Trạng thái</th>
+                <th>Thứ tự</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% data.forEach((item) => { %>
+              <tr>
+                <!-- <td class="align-middle">
+                  <div class="form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id="flexCheckDefault"
+                    />
+                    <label
+                      class="form-check-label d-none"
+                      for="flexCheckDefault"
+                    >
+                      checkbox
+                    </label>
+                  </div>
+                </td> -->
+
+                <td class="align-middle">
+                  <%- highlightHelper(item.name, search) %>
+                </td>
+
+                <td class="align-middle text-center" style="width: 200px">
+                  <%- statusHelper(COLLECTION, item._id, item.status ) %>
+                </td>
+
+                <td style="width: 100px">
+                  <%- orderingHelper(COLLECTION, item._id, item.ordering) %>
+                </td>
+
+                <td class="align-middle" style="width: 160px">
+                  <%- actionHelper(BASE_PATH,item._id,user.role) %>
+                </td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card-footer clearfix">
+          <%- paginationHelper(BASE_PATH, currentPage, totalPages) %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

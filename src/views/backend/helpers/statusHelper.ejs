@@ -1,0 +1,16 @@
+<%
+  statusHelper = (collection, id, status) => { 
+    const statusText = status == "active" ? "Đang hoạt động" : "Không hoạt động"
+    const typeButtonClass = status == 'active' ? 'success' : 'secondary'
+
+    return `
+      <a
+        id="change-status-${id}"
+        href="javascript:changeStatusHandler('${collection}', '${id}', '${status}')"
+        class="btn btn-sm btn-${ typeButtonClass }"
+      >
+        ${ statusText }
+      </a>
+    ` 
+	} 
+%>

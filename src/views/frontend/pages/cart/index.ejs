@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Head -->
+    <%- include('./../../layouts/elements/head') %>
+    <link
+      rel="stylesheet"
+      href="/frontend/stylesheets/cart.css"
+      type="text/css"
+    />
+  </head>
+  <body>
+    <div>
+      <!-- Header -->
+      <%- include('./../../layouts/elements/header') %>
+
+      <!-- Content -->
+      <div class="container">
+        <div class="cart-container">
+          <div class="cart">
+            <h2 class="title">Giỏ hàng</h2>
+            <div class="cart__list">
+              <!-- <div class="cart__item">
+                <div class="cart__image">
+                  <img
+                    src="/images/products/products-1688722506643.webp"
+                    alt=""
+                  />
+                </div>
+                <div class="cart__content">
+                  <div class="cart__top">
+                    <h4>Coolmate x Copper Denim | Áo Polo phối Jeans</h4>
+                    <div class="cart__remove">x</div>
+                  </div>
+                  <div class="cart__bottom">
+                    <div>
+                      <select name="size" id="size" class="size-box">
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                      </select>
+  
+                      <div class="quantity-box">
+                        <button
+                          class="quantity-box__button"
+                          onclick="decreaseQuantityHandler()"
+                        >
+                          -
+                        </button>
+                        <input
+                          type="text"
+                          class="quantity-box__input"
+                          value="1"
+                        />
+                        <button
+                          class="quantity-box__button"
+                          onclick="increaseQuantityHandler()"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+  
+                    <p class="cart__price">359.000đ</p>
+                  </div>
+                </div>
+              </div> -->
+            </div>
+          </div>
+          <form class="info" onsubmit="submitOrderHandler(event)" method="post">
+            <h2 class="title">Thông tin đơn hàng</h2>
+            <!--  -->
+            <% if (user) { %>
+            <div class="info__form">
+              <div class="info__form-group">
+                <label for="name" class="info__label">Họ tên</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  class="info__input"
+                  value="<%= user.name || '' %>"
+                />
+              </div>
+              <div class="info__form-group">
+                <label for="email" class="info__label">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  class="info__input"
+                  value="<%= user.email || '' %>"
+                  disabled
+                />
+              </div>
+              <div class="info__form-group">
+                <label for="phone" class="info__label">Số điện thoại</label>
+                <input
+                  type="text"
+                  id="phone"
+                  name="phone"
+                  value="<%= user.phone || '' %>"
+                  class="info__input"
+                />
+              </div>
+              <div class="info__form-group">
+                <label for="address" class="info__label">Địa chỉ</label>
+                <input
+                  type="text"
+                  id="address"
+                  name="address"
+                  class="info__input"
+                  value="<%= user.address || '' %>"
+                />
+              </div>
+            </div>
+
+            <% } %>
+
+            <div class="discount-box">
+              <input
+                type="text"
+                class="discount-box__input"
+                placeholder="Nhập mã giảm giá"
+              />
+              <button
+                type="button"
+                class="discount-box__button"
+                onclick="discountCodeHandler()"
+              >
+                Áp dụng
+              </button>
+            </div>
+
+            <div class="info__pricing">
+              <div class="info__row">
+                <p>Tạm tính</p>
+                <p id="temporary-total">0</p>
+              </div>
+              <div class="info__row">
+                <p>Giảm giá</p>
+                <p id="discount">
+                  <%= (0).toLocaleString( "vi-VN", { style: "currency",
+                  currency: "VND" } ) %>
+                </p>
+              </div>
+              <div class="info__row">
+                <p>Phí giao hàng</p>
+                <p id="shipping-fee">
+                  <%= (0).toLocaleString( "vi-VN", { style: "currency",
+                  currency: "VND" } ) %>
+                </p>
+              </div>
+            </div>
+            <div class="info__total">
+              <div class="info__row">
+                <p>Tổng</p>
+                <p id="total">
+                  <%= '0'.toLocaleString( "vi-VN", { style: "currency",
+                  currency: "VND" } ) %>
+                </p>
+              </div>
+            </div>
+
+            <% if (user) { %>
+            <button type="submit" class="info__button">Đặt hàng</button>
+            <% } else { %>
+            <button
+              type="button"
+              class="info__button"
+              onclick="redirectToLoginPage()"
+            >
+              Đăng nhập để đặt hàng
+            </button>
+            <% } %>
+          </form>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <%- include('./../../layouts/elements/footer') %>
+    </div>
+
+    <!-- Script -->
+    <%- include('./../../layouts/elements/script') %>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        processCart();
+        processPrice();
+      });
+
+      function submitOrderHandler(event) {
+        event.preventDefault();
+
+        const name = document.querySelector("#name").value;
+        const email = document.querySelector("#email").value;
+        const phone = document.querySelector("#phone").value;
+        const address = document.querySelector("#address").value;
+        const cartJson = localStorage.getItem("cart");
+        const discountCode = document.querySelector(
+          ".discount-box__input"
+        ).value;
+        const discount = document
+          .querySelector("#discount")
+          .innerHTML.replace(/\D/g, "");
+        const shippingFee = document
+          .querySelector("#shipping-fee")
+          .innerHTML.replace(/\D/g, "");
+
+        $.ajax({
+          type: "POST",
+          url: "/don-hang",
+          data: {
+            name,
+            email,
+            phone,
+            address,
+            cartJson,
+            discountCode,
+            discount,
+            shippingFee,
+          },
+          dataType: "json",
+          success: function (response) {
+            console.log(response);
+            if (response.status == "success") {
+              localStorage.setItem("cart", JSON.stringify([]));
+              setTimeout(() => {
+                window.location.href = "/tai-khoan/don-hang";
+              }, 1000);
+              myAlert("success", response.message);
+            } else {
+              myAlert("error", response.message);
+            }
+          },
+        });
+      }
+
+      function discountCodeHandler() {
+        const code = document.querySelector(".discount-box__input").value;
+        const discountDom = document.querySelector("#discount");
+
+        $.ajax({
+          type: "POST",
+          url: "/ma-giam-gia",
+          data: { code },
+          dataType: "json",
+          success: function (response) {
+            if (response.status == "success") {
+              if (response.discountCode.type === "fixed") {
+                discountDom.innerHTML =
+                  "-" +
+                  response.discountCode.discount.toLocaleString("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                  });
+              } else {
+                const temporaryTotalDom =
+                  document.querySelector("#temporary-total");
+
+                const discount = parseInt(
+                  (response.discountCode.discount / 100) *
+                    parseInt(temporaryTotalDom.innerHTML.replace(/\D/g, ""))
+                );
+                discountDom.innerHTML =
+                  "-" +
+                  discount.toLocaleString("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                  });
+              }
+
+              processPrice();
+              myAlert("success", "Áp dụng mã giảm giá thành công");
+            } else {
+              discountDom.innerHTML = (0).toLocaleString("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              });
+              processPrice();
+              myAlert("error", response.message);
+            }
+          },
+        });
+      }
+
+      function sizeChangeHandler(event) {
+        const cartItem = event.target.closest(".cart__item");
+        const sizeBox = event.target.closest(".size-box");
+        const size = event.target.value;
+
+        const updateProductId = cartItem.getAttribute("data-product-id");
+        const currentSize = cartItem.getAttribute("data-size");
+        const cartJson = localStorage.getItem("cart");
+        const cart = JSON.parse(cartJson);
+
+        const updatedCart = cart.map((item) => {
+          if (item.product === updateProductId && item.size === currentSize) {
+            item.size = size;
+          }
+          return item;
+        });
+
+        localStorage.setItem("cart", JSON.stringify(updatedCart));
+        processPrice();
+      }
+
+      function removeCartItem(event) {
+        const cartItem = event.target.closest(".cart__item");
+
+        const removeProductId = cartItem.getAttribute("data-product-id");
+        const currentSize = cartItem.getAttribute("data-size");
+
+        const cart = JSON.parse(localStorage.getItem("cart"));
+
+        const newCart = cart.filter((item) => {
+          return !(item.product == removeProductId && item.size == currentSize);
+        });
+
+        localStorage.setItem("cart", JSON.stringify(newCart));
+        cartItem.remove();
+        processPrice();
+      }
+
+      function decreaseQuantityHandler(event) {
+        const cartItem = event.target.closest(".cart__item");
+        const quantityBoxDom = event.target.closest(".quantity-box");
+        const input = quantityBoxDom.querySelector(".quantity-box__input");
+        const currentValue = parseInt(input.value);
+        if (currentValue <= 1) {
+          return;
+        }
+
+        input.value = currentValue - 1;
+
+        const updateProductId = cartItem.getAttribute("data-product-id");
+        const currentSize = cartItem.getAttribute("data-size");
+        const cart = JSON.parse(localStorage.getItem("cart"));
+
+        const updatedCart = cart.map((item) => {
+          if (item.product === updateProductId && item.size === currentSize) {
+            item.quantity = currentValue - 1;
+          }
+          return item;
+        });
+
+        localStorage.setItem("cart", JSON.stringify(updatedCart));
+        processPrice();
+      }
+
+      function increaseQuantityHandler(event) {
+        const cartItem = event.target.closest(".cart__item");
+        const quantityBoxDom = event.target.closest(".quantity-box");
+        const input = quantityBoxDom.querySelector(".quantity-box__input");
+        const currentValue = parseInt(input.value);
+        input.value = currentValue + 1;
+
+        const updateProductId = cartItem.getAttribute("data-product-id");
+        const currentSize = cartItem.getAttribute("data-size");
+        const cart = JSON.parse(localStorage.getItem("cart"));
+
+        const updatedCart = cart.map((item) => {
+          if (item.product === updateProductId && item.size === currentSize) {
+            item.quantity = currentValue + 1;
+          }
+          return item;
+        });
+
+        localStorage.setItem("cart", JSON.stringify(updatedCart));
+        processPrice();
+      }
+
+      function processPrice() {
+        const cartJson = localStorage.getItem("cart");
+
+        $.ajax({
+          type: "POST",
+          dataType: "json",
+          url: "/gio-hang",
+          data: { cartJson },
+          success: function (response) {
+            if (response.status == "success") {
+              let totalPrice = 0;
+
+              response.cart.forEach((item) => {
+                totalPrice += item.product.price * item.quantity;
+              });
+
+              const temporaryTotalDom =
+                document.querySelector("#temporary-total");
+              const totalDom = document.querySelector("#total");
+              const discountDom = document.querySelector("#discount");
+              const shippingFeeDom = document.querySelector("#shipping-fee");
+
+              temporaryTotalDom.innerHTML = totalPrice.toLocaleString("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              });
+
+              const discount = discountDom.innerHTML.replace(/\D/g, "");
+
+              // if have item in cart
+              if (totalPrice > 0) {
+                shippingFeeDom.innerHTML =
+                  "+ " +
+                  (25000).toLocaleString("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                  });
+              } else {
+                shippingFeeDom.innerHTML = (0).toLocaleString("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                });
+              }
+              const shippingFee = shippingFeeDom.innerHTML.replace(/\D/g, "");
+
+              let total = 0;
+
+              if (totalPrice - discount + parseInt(shippingFee) < 0) {
+                total = 0;
+              } else {
+                total = totalPrice - discount + parseInt(shippingFee);
+              }
+
+              totalDom.innerHTML = total.toLocaleString("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              });
+            }
+          },
+        });
+      }
+
+      function processCart() {
+        const parentElement = document.querySelector(".cart__list");
+        parentElement.innerHTML = "";
+
+        const cartJson = localStorage.getItem("cart");
+
+        $.ajax({
+          type: "POST",
+          dataType: "json",
+          url: "/gio-hang",
+          data: { cartJson },
+          success: function (response) {
+            if (response.status === "success") {
+              renderCart(response.cart);
+            }
+          },
+        });
+      }
+
+      function renderSizeBox(size, sizes) {
+        let sizeOptionsHtml = "";
+
+        sizes.forEach((sizeItem) => {
+          sizeOptionsHtml += `<option value="${sizeItem._id}" ${
+            sizeItem._id == size ? "selected" : ""
+          }>${sizeItem.name}</option>`;
+        });
+
+        return `<select name="size" id="size" class="size-box" onchange="sizeChangeHandler(event)">${sizeOptionsHtml}</select>`;
+      }
+
+      function renderCart(cart) {
+        let cartHtml = "";
+
+        cart.forEach((item) => {
+          cartHtml += `
+            <div class="cart__item" data-product-id="${
+              item.product._id
+            }"  data-size="${item.size}" >
+              <div class="cart__image">
+                <img src="/images/products/${item.product.image}" alt="${
+            item.product.name
+          }" />
+              </div>
+              <div class="cart__content">
+                <div class="cart__top">
+                  <h4>${item.product.name}</h4>
+                  <div class="cart__remove" onclick="removeCartItem(event)">x</div>
+                </div>
+                <div class="cart__bottom">
+                  <div>
+                    ${renderSizeBox(item.size, item.product.sizes)}
+
+                    <div class="quantity-box">
+                      <button class="quantity-box__button" onclick="decreaseQuantityHandler(event)">-</button>
+                      <input type="text" class="quantity-box__input" value="${
+                        item.quantity
+                      }" />
+                      <button class="quantity-box__button" onclick="increaseQuantityHandler(event)">+</button>
+                    </div>
+                  </div>
+
+                  <p class="cart__price">${item.product.price.toLocaleString(
+                    "vi-VN",
+                    { style: "currency", currency: "VND" }
+                  )} / 1</p>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        const cartList = document.querySelector(".cart__list");
+        cartList.innerHTML = cartHtml;
+      }
+
+      function redirectToLoginPage() {
+        window.location.href = "/dang-nhap";
+      }
+    </script>
+  </body>
+</html>

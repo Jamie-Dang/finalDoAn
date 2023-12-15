@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Head -->
+    <%- include('./../../layouts/elements/head') %>
+    <link
+      rel="stylesheet"
+      href="/frontend/stylesheets/account-layout.css"
+      type="text/css"
+    />
+    <link
+      rel="stylesheet"
+      href="/frontend/stylesheets/account-info.css"
+      type="text/css"
+    />
+  </head>
+  <body>
+    <div>
+      <!-- Header -->
+      <%- include('./../../layouts/elements/header') %>
+
+      <!-- Content -->
+      <div class="container">
+        <div class="account-container">
+          <div class="account">
+            <%- include('./elements/sidebar') %>
+
+            <div class="account__content">
+              <h2 class="account__title">
+                <%= (typeof title != "undefined" ? title : "") %>
+              </h2>
+
+              <div class="content__container">
+                <form
+                  class="content__form"
+                  onsubmit="updateAccountInfoHandler(event)"
+                  method="post"
+                >
+                  <div class="content__form-group">
+                    <label for="name" class="content__label">Họ tên</label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      class="content__input"
+                      value="<%= user.name %>"
+                    />
+                  </div>
+                  <div class="content__form-group">
+                    <label for="email" class="content__label">Email</label>
+                    <input
+                      type="text"
+                      id="email"
+                      name="email"
+                      class="content__input"
+                      value="<%= user.email %>"
+                      disabled
+                    />
+                  </div>
+
+                  <div class="content__form-group">
+                    <label for="phone" class="content__label"
+                      >Số điện thoại</label
+                    >
+                    <input
+                      type="text"
+                      id="phone"
+                      name="phone"
+                      class="content__input"
+                      value="<%= user.phone %>"
+                    />
+                  </div>
+
+                  <div class="content__form-group">
+                    <label for="address" class="content__label">Địa chỉ</label>
+                    <input
+                      type="text"
+                      id="address"
+                      name="address"
+                      class="content__input"
+                      value="<%= user.address %>"
+                    />
+                  </div>
+                  <button type="submit" class="content__button">
+                    Cập nhật
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <%- include('./../../layouts/elements/footer') %>
+    </div>
+
+    <!-- Script -->
+    <%- include('./../../layouts/elements/script') %>
+    <script>
+      const updateAccountInfoHandler = (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const formObject = Object.fromEntries(formData.entries());
+
+        $.ajax({
+          type: "POST",
+          url: `/tai-khoan/thong-tin-ca-nhan`,
+          dataType: "json",
+          data: formObject,
+          success: (response) => {
+            if (response.status == "success") {
+              myAlert("success", response.message);
+            } else {
+              myAlert("error", response.message);
+            }
+          },
+        });
+      };
+    </script>
+  </body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Head -->
+    <%- include('./../../layouts/elements/head') %>
+    <link
+      rel="stylesheet"
+      href="/frontend/stylesheets/account-layout.css"
+      type="text/css"
+    />
+    <link
+      rel="stylesheet"
+      href="/frontend/stylesheets/account-order.css"
+      type="text/css"
+    />
+  </head>
+  <body>
+    <div>
+      <!-- Header -->
+      <%- include('./../../layouts/elements/header') %>
+
+      <!-- Content -->
+      <div class="container">
+        <div class="account-container">
+          <div class="account">
+            <%- include('./elements/sidebar') %>
+
+            <div class="account__content">
+              <h2 class="account__title">THÔNG TIN ĐƠN HÀNG</h2>
+
+              <p class="order-id">
+                Đơn hàng #<%= order._id %> <% if (order.status === "confirmed")
+                { %>
+                <span class="order-status">Đã xác nhận</span>
+                <% } else if (order.status === "pending") { %>
+                <span class="order-status">Đang xử lý</span>
+                <% } else { %>
+                <span class="order-status">Đã hủy</span>
+                <% } %>
+              </p>
+              <p class="order-created">
+                Ngày đặt: <%= moment(order.createdAt).format('DD.MM.YYYY') %>
+              </p>
+
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Tên sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th width="120px">Giá</th>
+                    <th>Kích cỡ</th>
+                    <th class="text--right">Thành tiền</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% order.items.forEach(function(item) { %>
+                  <tr>
+                    <td><%= item.product.name %></td>
+                    <td><%= item.quantity %></td>
+                    <td>
+                      <%= item.price.toLocaleString( "vi-VN", { style:
+                      "currency", currency: "VND" }) %>
+                    </td>
+                    <td><%= item.size %></td>
+                    <td>
+                      <%= (item.price * item.quantity).toLocaleString( "vi-VN",
+                      { style: "currency", currency: "VND" }) %>
+                    </td>
+                  </tr>
+                  <% }); %>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="4">Mã giảm giá</td>
+                    <td><%= order.discountCode %></td>
+                  </tr>
+                  <tr>
+                    <td colspan="4">Tổng giá trị sản phẩm</td>
+                    <td>
+                      <%= order.items.reduce((acc, cur) => acc +
+                      cur.quantity*cur.price , 0).toLocaleString( "vi-VN", {
+                      style: "currency", currency: "VND" })%>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="4">Tổng khuyến mãi</td>
+                    <td>
+                      <%= order.discount.toLocaleString( "vi-VN", { style:
+                      "currency", currency: "VND" }) %>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="4">Phí giao hàng</td>
+                    <td>
+                      <%= order.shippingFee.toLocaleString( "vi-VN", { style:
+                      "currency", currency: "VND" }) %>
+                    </td>
+                  </tr>
+                  <tr class="total_payment">
+                    <td colspan="4">Tổng thanh toán</td>
+                    <td>
+                      <%= order.total.toLocaleString( "vi-VN", { style:
+                      "currency", currency: "VND" }) %>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+
+              <h2 class="account__title">THÔNG TIN GIAO HÀNG</h2>
+              <div class="detail">
+                <p>Tên người nhận: <span><%= order.name %></span></p>
+                <p>Địa chỉ email: <span><%= order.user.email %></span></p>
+                <p>Số điện thoại: <span><%= order.phone %></span></p>
+                <p>Địa chỉ giao hàng: <span><%= order.address %></span></p>
+              </div>
+
+              <% if (order.status == 'pending') { %>
+              <div style="display: flex; justify-content: center">
+                <button
+                  type="button"
+                  class="cancel__button"
+                  onclick="cancelOrderHanlder('<%= order._id %>')"
+                >
+                  Hủy đơn hàng
+                </button>
+              </div>
+              <% }%>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <%- include('./../../layouts/elements/footer') %>
+    </div>
+
+    <!-- Script -->
+    <%- include('./../../layouts/elements/script') %>
+    <script>
+      function cancelOrderHanlder(id) {
+        $.ajax({
+          type: "POST",
+          url: "/tai-khoan/don-hang/huy",
+          data: { id: id },
+          dataType: "json",
+          success: function (response) {
+            if (response.status === "success") {
+              myAlert(response.status, response.message);
+              setTimeout(() => {
+                window.location.reload();
+              }, 2000);
+            } else {
+              myAlert(response.status, response.message);
+            }
+          },
+        });
+      }
+    </script>
+  </body>
+</html>
