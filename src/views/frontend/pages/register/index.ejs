@@ -83,7 +83,7 @@
           data: formObject,
           success: (response) => {
             if (response.status == "success") {
-              myAlert("success", response.message);
+              myAlert("success", response.message); //Hiện thông báo đăng ký thành công thì rồi qua trang tài khoản trong vòng 1s
 
               setTimeout(() => {
                 window.location.href = "/tai-khoan";
