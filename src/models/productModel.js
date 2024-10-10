@@ -12,9 +12,6 @@ const productSchema = mongoose.Schema(
       type: String,
       default: "default.png",
     },
-    // subImages: {
-    //   type: String,
-    // },
     price: { type: Number },
     description: {
       type: String,
@@ -30,17 +27,12 @@ const productSchema = mongoose.Schema(
       default: "active",
     },
 
-    category: {
-      type: mongoose.Schema.ObjectId,
-    },
-    color: {
-      type: mongoose.Schema.ObjectId,
-    },
-    sizes: [
-      {
-        type: mongoose.Schema.ObjectId,
-      },
-    ],
+    // category: {
+    //   type: mongoose.Schema.ObjectId,
+    // },
+    category: { type: mongoose.Schema.Types.ObjectId, ref: "ProductCategory" },
+    color: { type: mongoose.Schema.Types.ObjectId, ref: "ProductColor" }, // Đảm bảo trường này có kiểu ObjectId và tham chiếu đến ProductColor
+    sizes: [{ type: mongoose.Schema.Types.ObjectId, ref: "ProductSize" }],
     isPriority: {
       type: Boolean,
       default: false,

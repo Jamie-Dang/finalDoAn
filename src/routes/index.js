@@ -6,13 +6,15 @@ router.use((req, res, next) => {
   res.locals.currentPath = req.path;
   next();
 });
-
+// admin
 router.use(
   "/admin",
   authController.protect,
   authController.restrictTo("admin", "staff"),
   require("./backend")
 );
+
+// user
 router.use("/", require("./frontend"));
 
 module.exports = router;

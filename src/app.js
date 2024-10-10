@@ -23,6 +23,7 @@ app.set("view engine", "ejs");
 
 app.use(expressLayouts);
 
+// Connect to DB
 mongoose
   .connect(process.env.DATABASE_URL)
   .then(() => console.log("Database connection successfully!"))
